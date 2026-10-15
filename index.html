@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Hemat Cricket Score</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 15px;
+  font-family: Arial, sans-serif;
+  background: #edf2ed;
+  color: #183629;
+}
+
+header {
+  background: #064e35;
+  color: white;
+  text-align: center;
+  padding: 22px 10px;
+  border-radius: 15px;
+}
+
+header h1 {
+  margin: 5px 0;
+}
+
+section {
+  background: white;
+  padding: 16px;
+  margin-top: 16px;
+  border-radius: 14px;
+  box-shadow: 0 2px 7px #00000012;
+}
+
+h2 {
+  color: #087f4b;
+  margin-top: 0;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 7px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
+}
+
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #087f4b;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  margin: 4px 2px;
+}
+
+button:active {
+  opacity: 0.7;
+}
+
+.scoreboard {
+  background: #064e35;
+  color: white;
+  text-align: center;
+  padding: 22px 10px;
+  border-radius: 14px;
+  margin-top: 16px;
+}
+
+.scoreboard h1 {
+  font-size: 42px;
+  margin: 12px 0;
+}
+
+.scoreboard h2 {
+  color: #a8ffca;
+}
+
+.score-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.score-buttons button {
+  min-width: 55px;
+  font-size: 18px;
+}
+
+.four {
+  background: #1565c0;
+}
+
+.six {
+  background: #7b1fa2;
+}
+
+.wicket {
+  background: #c62828;
+}
+
+.extra {
+  background: #e68a00;
+}
+
+.reset {
+  background: #b71c1c;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+th, td {
+  border: 1px solid #d0d9d2;
+  padding: 9px 4px;
+  text-align: center;
+}
+
+th {
+  background: #e0f2e7;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.status {
+  font-size: 18px;
+  color: #087f4b;
+  font-weight: bold;
+  text-align: center;
+}
+
+.small-button {
+  font-size: 12px;
+  padding: 7px;
+}
+
+footer {
+  text-align: center;
+  margin: 25px 0 10px;
+  color: #456354;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🏏 Hemat Cricket Score</h1>
+  <p>د کورني کرکټ سکورکارډ</p>
+  <p>🇦🇫 ستا لوبه، ستا سکور</p>
+</header>
+
+<!-- د لوبډلو ټاکل -->
+<section>
+  <h2>🏆 د لوبډلو ټاکل</h2>
+
+  <label for="team1">لومړۍ لوبډله</label>
+  <input id="team1" value="Hemat XI">
+
+  <label for="team2">دویمه لوبډله</label>
+  <input id="team2" value="Rival XI">
+
+  <button onclick="changeTeams()">لوبډلې ثبت کړه</button>
+</section>
+
+<!-- د سکوربورډ برخه -->
+<div class="scoreboard">
+  <h2 id="matchTitle">Hemat XI VS Rival XI</h2>
+
+  <p>د لوبې سکور</p>
+
+  <h1>
+    <span id="runs">0</span> /
+    <span id="wickets">0</span>
+  </h1>
+
+  <p>
+    اورونه:
+    <span id="overs">0.0</span>
+  </p>
+
+  <p>
+    د توپ اچونې پاتې حالت:
+    <span id="inningsMessage">لوبه روانه ده</span>
+  </p>
+</div>
+
+<!-- د منډو ثبتول -->
+<section>
+  <h2>🏏 د منډو ثبتول</h2>
+
+  <label for="activeBatter">اوسنی توپوهونکی</label>
+  <select id="activeBatter">
+    <option value="">لومړی لوبغاړی اضافه کړئ</option>
+  </select>
+
+  <div class="score-buttons">
+    <button onclick="addRuns(0)">توپ، منډه نشته</button>
+    <button onclick="addRuns(1)">+1</button>
+    <button onclick="addRuns(2)">+2</button>
+    <button onclick="addRuns(3)">+3</button>
+    <button class="four" onclick="addRuns(4)">4️⃣</button>
+    <button class="six" onclick="addRuns(6)">6️⃣</button>
+  </div>
+
+  <div class="score-buttons">
+    <button class="extra" onclick="addExtra('wide')">
+      Wide +1
+    </button>
+
+    <button class="extra" onclick="addExtra('noBall')">
+      No-ball +1
+    </button>
+
+    <button class="wicket" onclick="addWicket()">
+      ❌ ویکټه
+    </button>
+  </div>
+
+  <p>
+    یادونه: Wide او No-ball اضافي منډې دي؛
+    دا توپونه د اور په حساب کې نه شمېرل کېږي.
+  </p>
+</section>
+
+<!-- د لوبغاړو برخه -->
+<section>
+  <h2>👤 د لوبغاړو سکورکارډ</h2>
+
+  <label for="playerName">د لوبغاړي نوم</label>
+  <input
+    id="playerName"
+    type="text"
+    placeholder="د لوبغاړي نوم ولیکئ"
+  >
+
+  <button onclick="addPlayer()">+ لوبغاړی اضافه کړه</button>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>نوم</th>
+          <th>منډې</th>
+          <th>توپونه</th>
+          <th>څلوریزې</th>
+          <th>شپږیزې</th>
+          <th>حالت</th>
+        </tr>
+      </thead>
+      <tbody id="playerList"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- د توپ اچوونکو برخه -->
+<section>
+  <h2>🎯 د توپ اچوونکو معلومات</h2>
+
+  <label for="bowlerName">د توپ اچوونکي نوم</label>
+  <input
+    id="bowlerName"
+    type="text"
+    placeholder="د توپ اچوونکي نوم"
+  >
+
+  <button onclick="addBowler()">توپ اچوونکی اضافه کړه</button>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>نوم</th>
+          <th>اورونه</th>
+          <th>منډې</th>
+          <th>ویکټې</th>
+        </tr>
+      </thead>
+      <tbody id="bowlerList"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- د لوبې حالت -->
+<section>
+  <h2>📢 د لوبې حالت</h2>
+
+  <select id="matchStatus">
+    <option value="لوبه روانه ده">🏏 لوبه روانه ده</option>
+    <option value="د لوبې وقفه ده">⏸️ د لوبې وقفه</option>
+    <option value="د باران له امله ځنډ">🌧️ د باران ځنډ</option>
+    <option value="لوبه پای ته رسېدلې">🏁 لوبه پای ته رسېدلې</option>
+  </select>
+
+  <button onclick="changeStatus()">حالت ثبت کړه</button>
+
+  <p class="status" id="statusText">لوبه روانه ده</p>
+</section>
+
+<!-- د لوبې پایله -->
+<section>
+  <h2>🏆 د لوبې پایله</h2>
+
+  <p id="resultText">تر اوسه پایله نه ده ثبت شوې.</p>
+
+  <button onclick="finishMatch()">د لوبې پایله ثبت کړه</button>
+</section>
+
+<!-- د معلوماتو پاکول -->
+<section>
+  <h2>⚙️ د معلوماتو تنظیمات</h2>
+
+  <button onclick="resetMatch()" class="reset">
+    نوې لوبه پیل کړه
+  </button>
+
+  <p>
+    د نوې لوبې پیلول د اوسني سکور او لوبغاړو معلومات
+    پاکوي. مخکې له دې چې دا تڼۍ ووهئ، ډاډ ترلاسه کړئ
+    چې د پخوانۍ لوبې معلومات درته نور اړتیا نه لري.
+  </p>
+</section>
+
+<footer>
+  <p>© Hemat Cricket Score</p>
+  <p>د کورني کرکټ لپاره جوړ شوی</p>
+</footer>
+
+<script>
+const STORAGE_KEY = "hematCricketMatchV1";
+
+function initialState() {
+  return {
+    team1: "Hemat XI",
+    team2: "Rival XI",
+    runs: 0,
+    wickets: 0,
+    balls: 0,
+    status: "لوبه روانه ده",
+    finished: false,
+    players: [],
+    bowlers: [],
+    result: ""
+  };
+}
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (!saved) return initialState();
+
+    const data = JSON.parse(saved);
+
+    if (
+      !data ||
+      !Array.isArray(data.players) ||
+      !Array.isArray(data.bowlers)
+    ) {
+      return initialState();
+    }
+
+    return {
+      ...initialState(),
+      ...data
+    };
+  } catch (error) {
+    return initialState();
+  }
+}
+
+let state = loadState();
+
+function saveState() {
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(state)
+    );
+  } catch (error) {
+    alert("معلومات خوندي نه شول. د براوزر حافظه وګورئ.");
+  }
+}
+
+function getOvers() {
+  return Math.floor(state.balls / 6) +
+    "." + (state.balls % 6);
+}
+
+function render() {
+  document.getElementById("team1").value = state.team1;
+  document.getElementById("team2").value = state.team2;
+
+  document.getElementById("matchTitle").textContent =
+    state.team1 + " VS " + state.team2;
+
+  document.getElementById("runs").textContent = state.runs;
+  document.getElementById("wickets").textContent = state.wickets;
+  document.getElementById("overs").textContent = getOvers();
+
+  document.getElementById("inningsMessage").textContent =
+    state.finished ? "لوبه پای ته رسېدلې" : state.status;
+
+  document.getElementById("matchStatus").value = state.status;
+  document.getElementById("statusText").textContent = state.status;
+
+  document.getElementById("resultText").textContent =
+    state.result || "تر اوسه پایله نه ده ثبت شوې.";
+
+  renderPlayers();
+  renderBowlers();
+  renderActiveBatter();
+}
+
+function changeTeams() {
+  const t1 = document.getElementById("team1").value.trim();
+  const t2 = document.getElementById("team2").value.trim();
+
+  if (!t1 || !t2) {
+    alert("د دواړو لوبډلو نومونه ولیکئ.");
+    return;
+  }
+
+  if (t1 === t2) {
+    alert("دوه بېلابېلې لوبډلې وټاکئ.");
+    return;
+  }
+
+  state.team1 = t1;
+  state.team2 = t2;
+
+  saveState();
+  render();
+}
+
+function renderActiveBatter() {
+  const select = document.getElementById("activeBatter");
+  const oldValue = select.value;
+
+  select.innerHTML = "";
+
+  if (state.players.length === 0) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "لومړی لوبغاړی اضافه کړئ";
+    select.appendChild(option);
+    return;
+  }
+
+  state.players.forEach((player, index) => {
+    const option = document.createElement("option");
+    option.value = String(index);
+    option.textContent = player.name;
+    select.appendChild(option);
+  });
+
+  if (
+    oldValue !== "" &&
+    Number(oldValue) < state.players.length
+  ) {
+    select.value = oldValue;
+  }
+}
+
+function addPlayer() {
+  const input = document.getElementById("playerName");
+  const name = input.value.trim();
+
+  if (!name) {
+    alert("د لوبغاړي نوم ولیکئ.");
+    return;
+  }
+
+  state.players.push({
+    name: name,
+    runs: 0,
+    balls: 0,
+    fours: 0,
+    sixes: 0,
+    out: false
+  });
+
+  input.value = "";
+
+  saveState();
+  render();
+}
+
+function renderPlayers() {
+  const list = document.getElementById("playerList");
+  list.innerHTML = "";
+
+  state.players.forEach(player => {
+    const row = document.createElement("tr");
+
+    const values = [
+      player.name,
+      player.runs,
+      player.balls,
+      player.fours,
+      player.sixes,
+      player.out ? "Out" : "Not out"
+    ];
+
+    values.forEach(value => {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+
+    list.appendChild(row);
+  });
+}
+
+function addRuns(amount) {
+  if (state.finished || state.wickets >= 10) {
+    alert("لوبه پای ته رسېدلې ده.");
+    return;
+  }
+
+  const select = document.getElementById("activeBatter");
+  const index = select.value === "" ? -1 : Number(select.value);
+
+  if (index < 0 || !state.players[index]) {
+    alert("لومړی توپوهونکی اضافه او وټاکئ.");
+    return;
+  }
+
+  const batter = state.players[index];
+
+  if (batter.out) {
+    alert("دا لوبغاړی سوځېدلی دی. بل توپوهونکی وټاکئ.");
+    return;
+  }
+
+  state.runs += amount;
+  state.balls++;
+
+  batter.runs += amount;
+  batter.balls++;
+
+  if (amount === 4) batter.fours++;
+  if (amount === 6) batter.sixes++;
+
+  saveState();
+  render();
+}
+
+function addExtra(type) {
+  if (state.finished || state.wickets >= 10) {
+    alert("لوبه پای ته رسېدلې ده.");
+    return;
+  }
+
+  state.runs++;
+
+  const select = document.getElementById("activeBatter");
+  const index = select.value === "" ? -1 : Number(select.value);
+
+  if (type === "noBall" && index >= 0 && state.players[index]) {
+    if (!state.players[index].out) {
+      state.players[index].runs++;
+    }
+  }
+
+  saveState();
+  render();
+}
+
+function addWicket() {
+  if (state.finished || state.wickets >= 10) {
+    alert("لوبه پای ته رسېدلې ده.");
+    return;
+  }
+
+  state.wickets++;
+  state.balls++;
+
+  const select = document.getElementById("activeBatter");
+  const index = select.value === "" ? -1 : Number(select.value);
+
+  if (index >= 0 && state.players[index]) {
+    state.players[index].out = true;
+  }
+
+  saveState();
+  render();
+
+  alert("ویکټه ثبت شوه! بل توپوهونکی وټاکئ.");
+}
+
+function addBowler() {
+  const input = document.getElementById("bowlerName");
+  const name = input.value.trim();
+
+  if (!name) {
+    alert("د توپ اچوونکي نوم ولیکئ.");
+    return;
+  }
+
+  state.bowlers.push({
+    name: name,
+    balls: 0,
+    runs: 0,
+    wickets: 0
+  });
+
+  input.value = "";
+
+  saveState();
+  render();
+}
+
+function renderBowlers() {
+  const list = document.getElementById("bowlerList");
+  list.innerHTML = "";
+
+  state.bowlers.forEach(bowler => {
+    const row = document.createElement("tr");
+
+    const values = [
+      bowler.name,
+      Math.floor(bowler.balls / 6) + "." + (bowler.balls % 6),
+      bowler.runs,
+      bowler.wickets
+    ];
+
+    values.forEach(value => {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+
+    list.appendChild(row);
+  });
+}
+
+function changeStatus() {
+  state.status = document.getElementById("matchStatus").value;
+
+  if (state.status === "لوبه پای ته رسېدلې") {
+    state.finished = true;
+  }
+
+  saveState();
+  render();
+}
+
+function finishMatch() {
+  state.finished = true;
+  state.status = "لوبه پای ته رسېدلې";
+
+  state.result =
+    state.team1 + ": " + state.runs + "/" + state.wickets +
+    " (" + getOvers() + " اورونه)";
+
+  saveState();
+  render();
+}
+
+function resetMatch() {
+  const confirmed = confirm(
+    "ایا ډاډه یاست؟ د دې لوبې ټول ثبت شوي معلومات به پاک شي."
+  );
+
+  if (!confirmed) return;
+
+  state = initialState();
+
+  saveState();
+  render();
+}
+
+render();
+</script>
+
+</body>
+</html>
